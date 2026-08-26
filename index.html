@@ -1,0 +1,327 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FORTY-TWO HOURS — A Playable Juliet</title><style>
+:root{--gold:#c9a227;--gold2:#e8c96a;--ink:#0b0b0e;--paper:#f3ead6}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:-apple-system,'Segoe UI','PingFang TC','Noto Sans TC',Roboto,sans-serif;color:#fff;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;height:100dvh;aspect-ratio:9/16;max-width:100vw;background:#000;overflow:hidden;user-select:none}
+@media (max-aspect-ratio:9/16){#stage{width:100vw;height:100dvh;aspect-ratio:auto}}
+/* media layer */
+#media{position:absolute;inset:0;overflow:hidden;background:#000}
+#media img,#media video{width:100%;height:100%;object-fit:cover;display:block}
+.kb-in{animation:kbin 14s ease-out forwards}
+.kb-out{animation:kbout 14s ease-out forwards}
+.kb-left{animation:kbleft 14s ease-out forwards}
+.kb-right{animation:kbright 14s ease-out forwards}
+@keyframes kbin{from{transform:scale(1.02)}to{transform:scale(1.16)}}
+@keyframes kbout{from{transform:scale(1.16)}to{transform:scale(1.02)}}
+@keyframes kbleft{from{transform:scale(1.12) translateX(3%)}to{transform:scale(1.12) translateX(-3%)}}
+@keyframes kbright{from{transform:scale(1.12) translateX(-3%)}to{transform:scale(1.12) translateX(3%)}}
+.fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 90% at 50% 20%,#1d3557 0%,#0b1526 55%,#000 100%)}
+.fallback span{color:#c9a22766;letter-spacing:4px;font-size:13px;text-align:center;padding:0 24px}
+#scrim{position:absolute;inset:0;background:linear-gradient(180deg,#000c 0%,#0000 22%,#0000 55%,#000d 88%);pointer-events:none}
+.fadein{animation:fin 1.1s ease both}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+/* HUD */
+#hud{position:absolute;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 6px;z-index:6;display:none}
+#statsrow{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.stat{flex:1;max-width:31%}
+.stat .lab{font-size:8.5px;letter-spacing:2px;color:#e8d9ad;text-shadow:0 1px 3px #000;display:flex;justify-content:space-between}
+.stat .bar{height:3px;background:#ffffff2e;border-radius:2px;margin-top:3px;overflow:hidden}
+.stat .bar i{display:block;height:100%;background:var(--gold);border-radius:2px;transition:width .8s ease}
+#menuBtn{position:absolute;right:10px;top:calc(env(safe-area-inset-top,0px) + 30px);z-index:7;width:34px;height:34px;border:0;background:#0006;color:#e8d9ad;border-radius:9px;font-size:16px;cursor:pointer}
+#objwrap{margin-top:8px;font-size:9.5px;letter-spacing:1.5px;color:#cbb877;text-shadow:0 1px 3px #000}
+#objwrap b{color:#8f8460;font-weight:600;margin-right:6px}
+#phase{position:absolute;top:calc(env(safe-area-inset-top,0px) + 46px);left:0;right:0;text-align:center;font-size:11px;letter-spacing:5px;color:var(--gold2);text-shadow:0 1px 6px #000;z-index:5;font-weight:700}
+/* subtitles */
+#subs{position:absolute;left:8%;right:8%;bottom:11%;z-index:5;text-align:center}
+.subline{font-family:Georgia,'Times New Roman','PingFang TC','Noto Serif TC',serif;font-size:17px;line-height:1.55;color:#f6efe0;text-shadow:0 2px 10px #000,0 0 2px #000;animation:sup .9s ease both}
+@keyframes sup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#tapHint{position:absolute;bottom:4%;left:0;right:0;text-align:center;font-size:10px;letter-spacing:2px;color:#ffffff55;z-index:5;animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:.25}50%{opacity:.7}}
+/* spoiler panel */
+#spoiler{position:absolute;left:7%;right:7%;bottom:26%;z-index:5;background:#101a2ecc;border:1px solid #3d5a8088;border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.6;color:#b9cbe4;backdrop-filter:blur(4px);animation:sup .9s ease both}
+/* choice + meter panel */
+#panel{position:absolute;left:5%;right:5%;bottom:6%;z-index:8;display:none;flex-direction:column;gap:9px}
+#ask{font-family:Georgia,'PingFang TC',serif;font-size:15.5px;color:#f2e7c9;text-align:center;text-shadow:0 2px 8px #000;line-height:1.5;margin-bottom:2px}
+#intel{font-size:11.5px;line-height:1.55;color:#d8c17a;background:#00000080;border:1px solid #c9a22744;border-radius:9px;padding:8px 11px;text-align:center;font-style:italic}
+.opt{border:1px solid #c9a22755;background:#0a0a0ccc;color:#f4ecd8;border-radius:10px;padding:12px 14px;font-family:Georgia,'PingFang TC',serif;font-size:14.5px;line-height:1.4;text-align:center;cursor:pointer;backdrop-filter:blur(3px);transition:transform .08s,border-color .2s;animation:sup .7s ease both}
+.opt:active{transform:scale(.97)}
+.opt small{display:block;margin-top:4px;font-family:-apple-system,'PingFang TC',sans-serif;font-size:9px;letter-spacing:2.5px;color:#a98f3f}
+/* meter */
+#meterbox{position:absolute;top:16%;left:7%;right:7%;z-index:6;display:none;text-align:center}
+#meterTitle{font-size:12px;letter-spacing:4px;color:var(--gold2);font-weight:700;text-shadow:0 1px 6px #000}
+#meterGoal{font-size:10.5px;color:#d9cba0;margin-top:5px;line-height:1.5;text-shadow:0 1px 4px #000}
+#meterBarWrap{position:relative;height:9px;background:#00000099;border:1px solid #c9a22766;border-radius:6px;margin-top:8px;overflow:visible}
+#meterFill{height:100%;width:0%;border-radius:5px;background:linear-gradient(90deg,#7a5a17,#c9a227,#ffdf7e);transition:width .9s ease}
+#goldLine{position:absolute;top:-4px;bottom:-4px;width:2px;background:#ffe9a8;box-shadow:0 0 8px #ffdf7e}
+#react{position:absolute;left:8%;right:8%;bottom:34%;z-index:8;display:none;text-align:center;font-family:Georgia,'PingFang TC',serif;font-size:14.5px;color:#ffe9c4;text-shadow:0 2px 8px #000;line-height:1.55;animation:sup .6s ease both}
+/* toast */
+.toast{position:absolute;top:22%;left:0;right:0;text-align:center;font-size:12px;letter-spacing:2px;color:#ffe9a8;text-shadow:0 1px 6px #000;z-index:9;animation:tup 1.8s ease forwards;pointer-events:none}
+@keyframes tup{0%{opacity:0;transform:translateY(8px)}20%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+/* title & cards */
+.veil{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8%;background:#000a}
+.veil h1{font-family:Georgia,'PingFang TC',serif;font-size:44px;letter-spacing:10px;color:var(--gold2);text-shadow:0 0 30px #c9a22755;font-weight:600}
+.veil .vsub{font-size:13px;letter-spacing:6px;color:#e8d9ad;margin-top:12px}
+.veil .vtag{font-size:10.5px;letter-spacing:3px;color:#ffffff88;margin-top:26px}
+.veil .cardTitle{font-family:Georgia,'PingFang TC',serif;font-size:26px;letter-spacing:2px;color:var(--gold2);margin:10px 0 4px}
+.veil .cardKicker{font-size:10px;letter-spacing:4px;color:#b7a15c}
+.veil .cardBody{font-family:Georgia,'PingFang TC',serif;font-size:15px;line-height:1.7;color:#efe6cf;margin-top:14px;max-width:34ch}
+.veil .statline{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.veil .statline span{background:#ffffff17;border:1px solid #c9a22733;border-radius:8px;padding:4px 10px;font-size:11px;letter-spacing:1px;color:#e8d9ad}
+.veil .nxt{margin-top:22px;font-size:11px;letter-spacing:4px;color:var(--gold2)}
+.veil .nxtnote{font-size:10px;letter-spacing:2px;color:#ffffff66;margin-top:5px;font-style:italic}
+.bigbtn{margin-top:26px;border:1px solid var(--gold);background:#c9a22722;color:#ffe9a8;border-radius:24px;padding:13px 30px;font-size:13px;letter-spacing:3px;cursor:pointer;transition:background .2s}
+.bigbtn:active{background:#c9a22744}
+/* menu */
+#menu{position:absolute;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:#000b}
+#menu .mbox{width:78%;background:#14110acc;border:1px solid #c9a22744;border-radius:14px;padding:20px;backdrop-filter:blur(6px)}
+#menu h3{text-align:center;font-size:11px;letter-spacing:5px;color:var(--gold2);margin-bottom:14px}
+.mrow{display:flex;justify-content:space-between;align-items:center;border:1px solid #c9a22726;background:#00000055;border-radius:9px;padding:11px 13px;margin-bottom:8px;font-size:13px;color:#efe6cf;cursor:pointer}
+.sw{width:34px;height:19px;border-radius:10px;background:#555;position:relative;transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:left .2s}
+.sw.on{background:var(--gold)}.sw.on::after{left:17px}
+#menu .credit{text-align:center;font-size:9px;letter-spacing:2px;color:#ffffff44;margin-top:10px}
+</style></head><body>
+<div id="stage">
+ <div id="media"></div><div id="scrim"></div>
+ <div id="phase"></div>
+ <div id="hud">
+  <div id="statsrow">
+   <div class="stat"><div class="lab"><span id="lG"></span><span id="vG"></span></div><div class="bar"><i id="bG"></i></div></div>
+   <div class="stat"><div class="lab"><span id="lW"></span><span id="vW"></span></div><div class="bar"><i id="bW"></i></div></div>
+   <div class="stat"><div class="lab"><span id="lH"></span><span id="vH"></span></div><div class="bar"><i id="bH"></i></div></div>
+  </div>
+  <div id="objwrap"><b id="objLabel"></b><span id="obj"></span></div>
+ </div>
+ <button id="menuBtn" onclick="openMenu()">☰</button>
+ <div id="meterbox"><div id="meterTitle"></div><div id="meterGoal"></div>
+  <div id="meterBarWrap"><div id="meterFill"></div><div id="goldLine"></div></div></div>
+ <div id="subs"></div><div id="spoilerHost"></div>
+ <div id="react"></div>
+ <div id="panel"></div>
+ <div id="tapHint"></div>
+ <div id="veilHost"></div>
+ <div id="menu"><div class="mbox" id="mbox"></div></div>
+</div>
+<script src="resolver.js"></script>
+<script src="scenes.js"></script>
+<script>
+// ====== CINEMA ENGINE (ported unchanged from odyssey_cinema; only the storage keys and
+//        the meter scene id below differ, so saves never collide with the Odyssey build) ======
+const SAVE='romcine_v1', SETK='romcine_set_v1';
+const LANG_CODES=['en','zh-Hant','zh-Hans','ja'];
+let SET=Object.assign({voice:true,music:true,auto:true,lang:'en'},JSON.parse(localStorage.getItem(SETK)||'{}'));
+if(!LANG_CODES.includes(SET.lang))SET.lang='en'; // 舊存檔可能存 'zh' 這種兩碼值,退回英文
+let G=null, sub=null, timer=null, voAudio=null, bgm=null, busy=false, unlocked=false;
+const $=id=>document.getElementById(id);
+const LANGS={}; // code -> {sceneId:{overlay fields}, ui:{...}, flag:{...}}
+async function loadLangFile(code){
+ try{const res=await fetch('config/language/'+code+'.json',{cache:'no-store'});
+  if(!res.ok)return{};const ct=res.headers.get('content-type')||'';if(ct.includes('text/html'))return{};
+  return await res.json();}catch(e){return{}}}
+function unflattenLang(flat){const out={};
+ for(const key in flat){const val=flat[key];const parts=key.split('.');const id=parts[0];const rest=parts.slice(1);
+  out[id]=out[id]||{};
+  if(rest.length===1){out[id][rest[0]]=val;continue}
+  if(rest[0]==='opt'){const i=+rest[1],field=rest[2];out[id].options=out[id].options||[];out[id].options[i]=out[id].options[i]||{};out[id].options[i][field]=val;continue}
+  if(rest[0]==='round'){const i=+rest[1];out[id].rounds=out[id].rounds||[];out[id].rounds[i]=out[id].rounds[i]||{};
+   if(rest[2]==='ask'||rest[2]==='intel'){out[id].rounds[i][rest[2]]=val;continue}
+   if(rest[2]==='opt'){const j=+rest[3],field=rest[4];out[id].rounds[i].options=out[id].rounds[i].options||[];out[id].rounds[i].options[j]=out[id].rounds[i].options[j]||{};out[id].rounds[i].options[j][field]=val}}}
+ return out}
+async function loadAllLangs(){
+ await Promise.all(LANG_CODES.map(async code=>{LANGS[code]=unflattenLang(await loadLangFile(code))}))}
+const T=()=>Object.assign({},(LANGS.en&&LANGS.en.ui)||{},(LANGS[SET.lang]&&LANGS[SET.lang].ui)||{});
+// localized view of a scene: language JSON text fields overlay EN scenes.js base;
+// fx/goto/delta/media/type always from EN base (loc() 合併規則沿用原設計,只是覆蓋層來源從 i18n_zh.js 換成 JSON)
+function loc(id){const s=SCENES[id];if(!s)return s;
+ const z=(LANGS[SET.lang]&&LANGS[SET.lang][id])||null;
+ if(SET.lang==='en'||!z)return s;
+ const m=Object.assign({},s,z);
+ if(z.options&&s.options)m.options=s.options.map((o,i)=>Object.assign({},o,z.options[i]||{}));else if(s.options)m.options=s.options;
+ if(z.rounds&&s.rounds)m.rounds=s.rounds.map((r,i)=>{const zr=z.rounds[i]||{};const mr=Object.assign({},r,zr);
+  if(zr.options&&r.options)mr.options=r.options.map((o,j)=>Object.assign({},o,zr.options[j]||{}));else mr.options=r.options;return mr});
+ else if(s.rounds)m.rounds=s.rounds;
+ return m}
+function fresh(){return {scene:'S01',glory:30,wisdom:30,heart:30,flags:{},meter:0,round:0,choices:[]}}
+function save(){localStorage.setItem(SAVE,JSON.stringify(G))}
+function load(){try{const s=localStorage.getItem(SAVE);return s?JSON.parse(s):null}catch(e){return null}}
+function saveSet(){localStorage.setItem(SETK,JSON.stringify(SET))}
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;$('stage').appendChild(t);setTimeout(()=>t.remove(),1900)}
+function hud(show){$('hud').style.display=show?'block':'none';
+ $('lG').textContent=T().glory;$('lW').textContent=T().wisdom;$('lH').textContent=T().heart;
+ $('objLabel').textContent=T().objective;
+ $('bG').style.width=G.glory+'%';$('bW').style.width=G.wisdom+'%';$('bH').style.width=G.heart+'%';
+ $('vG').textContent=G.glory;$('vW').textContent=G.wisdom;$('vH').textContent=G.heart}
+function applyFx(fx){if(!fx)return;const map={glory:T().glory,wisdom:T().wisdom,heart:T().heart};let msgs=[];
+ for(const k in fx){G[k]=Math.max(0,Math.min(100,(G[k]||0)+fx[k]));if(fx[k])msgs.push((fx[k]>0?'+':'')+fx[k]+' '+map[k])}
+ if(msgs.length)toast(msgs.join('   '));hud(true)}
+// media slot: image or video — swap by changing scenes.js media field only. paths resolve via assetUrl() (三層 fallback,見 resolver.js)
+function renderMedia(s){const m=$('media');m.innerHTML='';
+ const md=s.media||{};
+ if(md.video){const v=document.createElement('video');v.src=assetUrl(md.video);
+  v.muted=(md.muted!==undefined)?md.muted:(window.GG_MUTED||!SET.voice); v.loop=!!md.loop; v.playsInline=true; v.autoplay=true;
+  v.onerror=()=>{if(md.img){const im=document.createElement('img');im.className=(s.kb||'kb-in');im.src=assetUrl(md.img);m.innerHTML='';m.appendChild(im)}else{m.innerHTML='<div class="fallback"><span></span></div>'}};
+  m.appendChild(v);m.className='fadein';
+  v.play().catch(()=>{v.muted=true;v.play().catch(()=>{})});
+  return}
+ if(md.img){const im=document.createElement('img');im.className=(s.kb||'kb-in');im.src=assetUrl(md.img);
+  im.onerror=()=>{const note=['title','results','death'].includes(s.type)?'':(s.phase||'')+'<br><br>[ artwork loading soon ]';m.innerHTML='<div class="fallback"><span>'+note+'</span></div>'};
+  m.appendChild(im);m.className='fadein';return}
+ m.innerHTML='<div class="fallback"><span></span></div>'}
+function duckBgm(){if(bgm&&bgm!=='none'){if(bgm._prevVol===undefined)bgm._prevVol=bgm.volume;bgm.volume=0.06}}
+function restoreBgm(){if(bgm&&bgm!=='none'&&bgm._prevVol!==undefined){bgm.volume=bgm._prevVol}}
+function stopAudio(){if(voAudio){voAudio.pause();voAudio=null}if(timer){clearTimeout(timer);timer=null}}
+function playVO(id,state){if(!SET.voice||window.GG_MUTED)return null; // ?muted=1 或 webdriver 一律不發聲(GameGen 靜音測試規格)
+ const a=new Audio(assetUrl('sfx_voice_en_'+id.toLowerCase()+'_a.mp3'));voAudio=a;
+ a.onloadedmetadata=()=>{if(a.duration)state.dur=a.duration};
+ a.onerror=()=>{voAudio=null};a.play().catch(()=>{});return a}
+function ensureBgm(){if(window.GG_MUTED)return; // 靜音模式下連 Audio 物件都不建立
+ if(!bgm){bgm=new Audio(assetUrl('bgm_base.mp3'));bgm.loop=true;bgm.volume=0.28;bgm.onerror=()=>{bgm='none'}}
+ if(bgm!=='none'){SET.music?bgm.play().catch(()=>{}):bgm.pause()}}
+// ---- scene runner ----
+function go(id){stopAudio();const oldVid=$('media').querySelector('video');if(oldVid)oldVid.pause();
+ $('panel').style.display='none';$('react').style.display='none';
+ $('subs').innerHTML='';$('spoilerHost').innerHTML='';$('veilHost').innerHTML='';$('meterbox').style.display='none';
+ const s=loc(id);if(!s){$('subs').innerHTML='<div class="subline">Missing scene: '+id+'</div>';return}
+ G.scene=id;if(s.type!=='meter'){G.round=0}save();
+ renderMedia(s);
+ $('phase').textContent=s.phase||'';
+ $('obj').textContent=s.objective||'';
+ hud(!['title','results','death'].includes(s.type));
+ $('tapHint').style.display='none';$('tapHint').textContent=T().tap;
+ if(s.type==='title')return veilTitle(s);
+ if(s.type==='results')return veilResults(s);
+ if(s.type==='death')return veilDeath(s);
+ if(s.type==='meter')return runMeter(s);
+ runBeat(s)}
+const WPS=2.29; // measured average edge-tts pace across all VO clips (see TEST_LOG)
+function runBeat(s){if(s.media&&s.media.video&&s.caption!==undefined){return runVideoBeat(s)}
+ const lines=(s.vo||'').split('|').filter(Boolean);
+ const enLines=((SCENES[G.scene]&&SCENES[G.scene].vo)||s.vo||'').split('|').filter(Boolean);
+ const wc=idx=>Math.max(1,((enLines[idx]!==undefined?enLines[idx]:lines[idx])||'').split(/\s+/).filter(Boolean).length);
+ const weights=lines.map((_,idx)=>wc(idx));
+ const totalW=weights.reduce((a,b)=>a+b,0)||1;
+ const state={dur:null};let i=0;busy=false;
+ const a=playVO(G.scene,state);
+ // per-line delay: once real audio duration is known, split it proportionally by each
+ // line's word count (equal division made short lines linger and cut long lines short)
+ const lineDelay=idx=>state.dur
+  ?Math.max(900,state.dur*1000*(weights[idx]/totalW))
+  :Math.max(1400,weights[idx]/WPS*1000);
+ const next=()=>{if(i<lines.length){const d=document.createElement('div');d.className='subline';d.textContent=lines[i];
+   $('subs').innerHTML='';$('subs').appendChild(d);
+   const delay=lineDelay(i);i++;
+   timer=setTimeout(next,delay);
+  }else if(s.spoiler&&!$('spoilerHost').innerHTML){
+   $('spoilerHost').innerHTML='<div id="spoiler">'+s.spoiler+'</div>';
+   timer=setTimeout(next,3400);
+  }else{finishBeat(s)}};
+ // wait briefly for real audio duration (usually <50ms for a local clip) so even
+ // line 1 gets accurate proportional timing instead of the word-count estimate
+ let started=false;const start=()=>{if(started)return;started=true;next()};
+ if(a){a.addEventListener('loadedmetadata',start,{once:true});timer=setTimeout(start,200)}
+ else{start()}
+ $('stage').onclick=e=>{if(e.target.closest('#menu,#menuBtn,.opt,.bigbtn'))return;
+  clearTimeout(timer);
+  if(!started){start();return}
+  if(i<lines.length){next()}else if(s.spoiler&&!$('spoilerHost').innerHTML){next()}else{finishBeat(s)}}}
+function runVideoBeat(s){busy=false;
+ const d=document.createElement('div');d.className='subline';d.textContent=s.caption;
+ $('subs').innerHTML='';$('subs').appendChild(d);
+ duckBgm();
+ let advanced=false;
+ const advance=()=>{if(advanced)return;advanced=true;restoreBgm();
+  if(s.spoiler&&!$('spoilerHost').innerHTML){$('spoilerHost').innerHTML='<div id="spoiler">'+s.spoiler+'</div>';timer=setTimeout(()=>finishBeat(s),3400);return}
+  finishBeat(s)};
+ const vid=$('media').querySelector('video');
+ if(vid){vid.onended=advance;timer=setTimeout(advance,10800)}else{timer=setTimeout(advance,4000)}
+ $('stage').onclick=e=>{if(e.target.closest('#menu,#menuBtn,.opt,.bigbtn'))return;
+  clearTimeout(timer);
+  if(!advanced){advance()}else if(s.spoiler&&$('spoilerHost').innerHTML){finishBeat(s)}}}
+function finishBeat(s){if(busy)return;
+ if(s.type==='choice'){busy=true;showChoices(s);return}
+ if(SET.auto){go(s.goto)}else{$('tapHint').style.display='block';$('stage').onclick=e=>{if(e.target.closest('#menu,#menuBtn'))return;go(s.goto)}}}
+function showChoices(s){stopAudio();$('subs').innerHTML='';$('spoilerHost').innerHTML='';const p=$('panel');p.innerHTML='';
+ if(s.ask)p.innerHTML+='<div id="ask">'+s.ask+'</div>';
+ if(s.intel)p.innerHTML+='<div id="intel">'+s.intel+'</div>';
+ s.options.forEach((o,i)=>{const b=document.createElement('button');b.className='opt';b.style.animationDelay=(0.15*i)+'s';
+  b.innerHTML=o.label+'<small>'+(o.tone||'')+'</small>';
+  b.onclick=ev=>{ev.stopPropagation();applyFx(o.fx);if(o.flag)G.flags[o.flag]=1;G.choices.push(o.tone||o.label);save();go(o.goto)};
+  p.appendChild(b)});
+ p.style.display='flex'}
+// ---- persuasion meter ----
+function runMeter(s){if(!G.round)G.meter=s.start;
+ $('meterbox').style.display='block';$('meterTitle').textContent=s.title;$('meterGoal').textContent=s.goalText;
+ $('goldLine').style.left=s.gold+'%';setTimeout(()=>{$('meterFill').style.width=G.meter+'%'},80);
+ meterRound(s)}
+function meterRound(s){const r=s.rounds[G.round];
+ if(!r){const win=G.meter>=s.gold;go(win?s.win:s.fail);return}
+ $('subs').innerHTML='';const p=$('panel');p.innerHTML='<div id="ask">'+r.ask+'</div>'+(r.intel?'<div id="intel">'+r.intel+'</div>':'');
+ r.options.forEach((o,i)=>{const b=document.createElement('button');b.className='opt';b.style.animationDelay=(0.15*i)+'s';
+  b.innerHTML=o.label+'<small>'+(o.tone||'')+'</small>';
+  b.onclick=ev=>{ev.stopPropagation();p.style.display='none';
+   G.meter=Math.max(0,Math.min(100,G.meter+o.delta));G.round++;save();
+   $('meterFill').style.width=G.meter+'%';
+   toast((o.delta>0?'+':'')+o.delta+' '+T().persuasion);
+   const rc=$('react');rc.textContent=o.react||'';rc.style.display='block';
+   setTimeout(()=>{rc.style.display='none';meterRound(s)},2600)};
+  p.appendChild(b)});
+ p.style.display='flex'}
+// ---- veils (title / results / death) ----
+function veilTitle(s){$('veilHost').innerHTML=
+ '<div class="veil"><h1>'+s.title+'</h1><div class="vsub">'+s.sub+'</div><div class="vtag">'+s.tagline+'</div>'+
+ '<button class="bigbtn" id="beginBtn">'+s.btn+'</button></div>';
+ $('beginBtn').onclick=e=>{e.stopPropagation();unlocked=true;ensureBgm();go(s.goto)}}
+function flagNames(){const ks=Object.keys(G.flags);if(!ks.length)return T().pathBook;
+ const flagDict=(LANGS[SET.lang]&&LANGS[SET.lang].flag)||{};
+ const names=ks.map(k=>flagDict[k]||k);return T().path+names.join(' · ')}
+function veilResults(s){stopAudio();
+ $('veilHost').innerHTML='<div class="veil"><div class="cardKicker">'+s.phase+'</div><div class="cardTitle">'+s.title+'</div>'+
+ '<div class="statline"><span>'+T().glory+' '+G.glory+'</span><span>'+T().wisdom+' '+G.wisdom+'</span><span>'+T().heart+' '+G.heart+'</span></div>'+
+ '<div class="statline"><span>'+flagNames()+'</span></div>'+
+ '<div class="cardBody">'+s.body.split('|').join('<br>')+'</div>'+
+ '<div class="nxt">'+s.next+'</div><div class="nxtnote">'+s.nextNote+'</div>'+
+ '<button class="bigbtn" id="againBtn">'+s.btn+'</button></div>';
+ $('againBtn').onclick=e=>{e.stopPropagation();restartAll()}}
+function veilDeath(s){stopAudio();
+ $('veilHost').innerHTML='<div class="veil"><div class="cardKicker">'+T().died+'</div><div class="cardTitle">'+s.title+'</div>'+
+ '<div class="cardBody">'+s.body.split('|').join('<br>')+'</div>'+
+ '<button class="bigbtn" id="rewindBtn">'+s.btn+'</button></div>';
+ $('rewindBtn').onclick=e=>{e.stopPropagation();G.round=0;go(s.goto)}}
+// ---- menu ----
+function openMenu(){paintMenu();$('menu').style.display='flex'}
+function closeMenu(){$('menu').style.display='none'}
+function paintMenu(){const t=T();
+ $('mbox').innerHTML='<h3>'+t.menu+'</h3>'+
+ '<div class="mrow" onclick="tgl(\'voice\')">'+t.voice+' <div class="sw'+(SET.voice?' on':'')+'"></div></div>'+
+ '<div class="mrow" onclick="tgl(\'music\')">'+t.music+' <div class="sw'+(SET.music?' on':'')+'"></div></div>'+
+ '<div class="mrow" onclick="tgl(\'auto\')">'+t.auto+' <div class="sw'+(SET.auto?' on':'')+'"></div></div>'+
+ '<div class="mrow" onclick="tglLang()">'+t.lang+'</div>'+
+ '<div class="mrow" onclick="restartAll()">'+t.restart+'</div>'+
+ '<div class="mrow" onclick="closeMenu()">'+t.close+'</div>'+
+ '<div class="credit">'+t.credit+'</div>'}
+function tgl(k){SET[k]=!SET[k];saveSet();paintMenu();
+ if(k==='music')ensureBgm();
+ if(k==='voice'){if(!SET.voice)stopAudio();const v=$('media').querySelector('video');if(v&&G.scene!=='S09')v.muted=!SET.voice}}
+function tglLang(){const i=LANG_CODES.indexOf(SET.lang);SET.lang=LANG_CODES[(i+1)%LANG_CODES.length];saveSet();paintMenu();go(G.scene)}
+function restartAll(){stopAudio();localStorage.removeItem(SAVE);G=fresh();closeMenu();go('S01')}
+// ---- GameGen 引擎合約(GameConfig/GameHandle,見打包規格 §2-7)：外部可用 setLang()/destroy() 操作本遊戲 ----
+window.GameHandle={
+ setLang(lang){if(!LANG_CODES.includes(lang))return;SET.lang=lang;saveSet();paintMenu();go(G.scene)},
+ destroy(){stopAudio();if(bgm&&bgm!=='none')bgm.pause();document.getElementById('stage').onclick=null}};
+// boot：先預熱資產解析(三層 fallback)+載入四語言 JSON,才進第一個場景
+const ASSET_LIST=['bgm_base.mp3'];
+for(const id in SCENES){const s=SCENES[id];
+ if(s.media&&s.media.img)ASSET_LIST.push(s.media.img);
+ if(s.media&&s.media.video)ASSET_LIST.push(s.media.video);
+ if(s.type==='beat'||s.type==='choice')ASSET_LIST.push('sfx_voice_en_'+id.toLowerCase()+'_a.mp3')}
+(async function boot(){
+ await window.GG_warmAssets(ASSET_LIST);
+ await loadAllLangs();
+ G=load()||fresh();
+ if(!SCENES[G.scene])G=fresh();
+ go(G.scene==='S01'?'S01':G.scene);
+})();
+</script></body></html>
