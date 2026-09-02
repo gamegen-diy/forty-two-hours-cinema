@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>FORTY-TWO HOURS — A Playable Juliet</title><style>
+<title>Romeo & Juliet: I Got Reborn Again</title><style>
 :root{--gold:#c9a227;--gold2:#e8c96a;--ink:#0b0b0e;--paper:#f3ead6}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:#000;overflow:hidden}
@@ -36,7 +36,7 @@ body{font-family:-apple-system,'Segoe UI','PingFang TC','Noto Sans TC',Roboto,sa
 #phase{position:absolute;top:calc(env(safe-area-inset-top,0px) + 46px);left:0;right:0;text-align:center;font-size:11px;letter-spacing:5px;color:var(--gold2);text-shadow:0 1px 6px #000;z-index:5;font-weight:700}
 /* subtitles */
 #subs{position:absolute;left:8%;right:8%;bottom:11%;z-index:5;text-align:center}
-.subline{font-family:Georgia,'Times New Roman','PingFang TC','Noto Serif TC',serif;font-size:17px;line-height:1.55;color:#f6efe0;text-shadow:0 2px 10px #000,0 0 2px #000;animation:sup .9s ease both}
+.subline{font-family:Georgia,'Times New Roman','PingFang TC','Noto Serif TC',serif;font-size:17px;line-height:1.55;color:#f6efe0;text-shadow:0 2px 10px #000,0 0 2px #000;animation:sup .9s ease both;text-wrap:balance;line-break:strict}
 @keyframes sup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 #tapHint{position:absolute;bottom:4%;left:0;right:0;text-align:center;font-size:10px;letter-spacing:2px;color:#ffffff55;z-index:5;animation:pulse 2.4s infinite}
 @keyframes pulse{0%,100%{opacity:.25}50%{opacity:.7}}
@@ -44,8 +44,8 @@ body{font-family:-apple-system,'Segoe UI','PingFang TC','Noto Sans TC',Roboto,sa
 #spoiler{position:absolute;left:7%;right:7%;bottom:26%;z-index:5;background:#101a2ecc;border:1px solid #3d5a8088;border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.6;color:#b9cbe4;backdrop-filter:blur(4px);animation:sup .9s ease both}
 /* choice + meter panel */
 #panel{position:absolute;left:5%;right:5%;bottom:6%;z-index:8;display:none;flex-direction:column;gap:9px}
-#ask{font-family:Georgia,'PingFang TC',serif;font-size:15.5px;color:#f2e7c9;text-align:center;text-shadow:0 2px 8px #000;line-height:1.5;margin-bottom:2px}
-#intel{font-size:11.5px;line-height:1.55;color:#d8c17a;background:#00000080;border:1px solid #c9a22744;border-radius:9px;padding:8px 11px;text-align:center;font-style:italic}
+#ask{font-family:Georgia,'PingFang TC',serif;font-size:15.5px;color:#f2e7c9;text-align:center;text-shadow:0 2px 8px #000;line-height:1.5;margin-bottom:2px;text-wrap:balance;line-break:strict}
+#intel{font-size:11.5px;line-height:1.55;text-wrap:balance;line-break:strict;color:#d8c17a;background:#00000080;border:1px solid #c9a22744;border-radius:9px;padding:8px 11px;text-align:center;font-style:italic}
 .opt{border:1px solid #c9a22755;background:#0a0a0ccc;color:#f4ecd8;border-radius:10px;padding:12px 14px;font-family:Georgia,'PingFang TC',serif;font-size:14.5px;line-height:1.4;text-align:center;cursor:pointer;backdrop-filter:blur(3px);transition:transform .08s,border-color .2s;animation:sup .7s ease both}
 .opt:active{transform:scale(.97)}
 .opt small{display:block;margin-top:4px;font-family:-apple-system,'PingFang TC',sans-serif;font-size:9px;letter-spacing:2.5px;color:#a98f3f}
@@ -62,19 +62,42 @@ body{font-family:-apple-system,'Segoe UI','PingFang TC','Noto Sans TC',Roboto,sa
 @keyframes tup{0%{opacity:0;transform:translateY(8px)}20%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
 /* title & cards */
 .veil{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8%;background:#000a}
-.veil h1{font-family:Georgia,'PingFang TC',serif;font-size:44px;letter-spacing:10px;color:var(--gold2);text-shadow:0 0 30px #c9a22755;font-weight:600}
-.veil .vsub{font-size:13px;letter-spacing:6px;color:#e8d9ad;margin-top:12px}
-.veil .vtag{font-size:10.5px;letter-spacing:3px;color:#ffffff88;margin-top:26px}
+.veil h1{font-family:Georgia,'PingFang TC',serif;font-size:44px;letter-spacing:10px;color:var(--gold2);text-shadow:0 0 30px #c9a22755;font-weight:600;text-wrap:balance;line-break:strict}
+.veil .vsub{font-size:13px;letter-spacing:6px;color:#e8d9ad;margin-top:12px;text-wrap:balance;line-break:strict}
+.veil .vtag{font-size:10.5px;letter-spacing:3px;color:#ffffff88;margin-top:26px;text-wrap:balance;line-break:strict}
 .veil .cardTitle{font-family:Georgia,'PingFang TC',serif;font-size:26px;letter-spacing:2px;color:var(--gold2);margin:10px 0 4px}
 .veil .cardKicker{font-size:10px;letter-spacing:4px;color:#b7a15c}
 .veil .cardBody{font-family:Georgia,'PingFang TC',serif;font-size:15px;line-height:1.7;color:#efe6cf;margin-top:14px;max-width:34ch}
 .veil .statline{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center}
 .veil .statline span{background:#ffffff17;border:1px solid #c9a22733;border-radius:8px;padding:4px 10px;font-size:11px;letter-spacing:1px;color:#e8d9ad}
+.veil .epi{font-style:italic;color:var(--gold2);font-size:13.5px;line-height:1.7;margin-top:12px;max-width:34ch}
 .veil .nxt{margin-top:22px;font-size:11px;letter-spacing:4px;color:var(--gold2)}
 .veil .nxtnote{font-size:10px;letter-spacing:2px;color:#ffffff66;margin-top:5px;font-style:italic}
 .bigbtn{margin-top:26px;border:1px solid var(--gold);background:#c9a22722;color:#ffe9a8;border-radius:24px;padding:13px 30px;font-size:13px;letter-spacing:3px;cursor:pointer;transition:background .2s}
 .bigbtn:active{background:#c9a22744}
+/* 結局畫面「電影感」版型（2026-08-31 Pizza 選 A）：圖看得見+文字分層漸入,取代整片黑底 */
+.up{animation:sup .9s ease both}
+.resVeil{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;padding:7% 9% 9%}
+.resScrim{position:absolute;inset:0;background:linear-gradient(180deg,#000c 0%,#0002 26%,#0001 46%,#000d 72%,#000f 100%)}
+.resRule{display:flex;align-items:center;gap:12px;color:#b7a15c;font-size:10px;letter-spacing:6px}
+.resRule::before,.resRule::after{content:"";height:1px;width:44px;background:linear-gradient(90deg,transparent,#c9a22788)}
+.resRule::after{background:linear-gradient(90deg,#c9a22788,transparent)}
+.resTitle{font-family:Georgia,'PingFang TC','Noto Serif TC',serif;font-size:32px;letter-spacing:8px;color:var(--gold2);text-shadow:0 0 34px #c9a22766,0 2px 8px #000;margin:12px 0 16px;font-weight:600;text-indent:8px;text-wrap:balance;line-break:strict}
+.resBody{font-family:Georgia,'PingFang TC','Noto Serif TC',serif;font-size:14.5px;line-height:1.85;color:#efe6cf;text-shadow:0 2px 8px #000;max-width:32ch}
+.resBody div{opacity:0;animation:sup .9s ease forwards}
+.resEpi{margin:16px 0 2px;font-style:italic;color:var(--gold2);font-size:13px;line-height:1.8;max-width:30ch;opacity:0;animation:sup .9s ease forwards}
+.resEpi::before{content:"「"}.resEpi::after{content:"」"}
+.resRow{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:center;opacity:0;animation:sup .9s ease forwards}
+.resRow span{background:#ffffff14;border:1px solid #c9a22733;border-radius:8px;padding:4px 11px;font-size:10.5px;letter-spacing:1px;color:#e8d9ad;backdrop-filter:blur(2px)}
+.resNxt{margin-top:14px;font-size:10.5px;letter-spacing:4px;color:var(--gold2);opacity:0;animation:sup .9s ease forwards}
+.resNote{font-size:9.5px;letter-spacing:2px;color:#ffffff77;margin-top:5px;font-style:italic;opacity:0;animation:sup .9s ease forwards}
+.resBtn{opacity:0;animation:sup .9s ease forwards}
+/* 片頭封面（2026-08-31 二修）：Pizza抓到字疊臉+斷點難看——原本置中排版剛好落在海報圖人臉那一帶。
+   改沿用 resVeil/resScrim(跟結局畫面同一套語言)：文字整塊貼底部，人臉留在上方淨空區,不會互蓋。 */
+.posterSub{font-size:12px;letter-spacing:5px;color:#e8d9ad;margin-top:10px}
+.posterTag{font-size:10px;letter-spacing:2.5px;color:#ffffff88;margin-top:18px;max-width:30ch;line-height:1.7;text-wrap:balance;line-break:strict}
 /* menu */
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:15}
 #menu{position:absolute;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:#000b}
 #menu .mbox{width:78%;background:#14110acc;border:1px solid #c9a22744;border-radius:14px;padding:20px;backdrop-filter:blur(6px)}
 #menu h3{text-align:center;font-size:11px;letter-spacing:5px;color:var(--gold2);margin-bottom:14px}
@@ -85,7 +108,7 @@ body{font-family:-apple-system,'Segoe UI','PingFang TC','Noto Sans TC',Roboto,sa
 #menu .credit{text-align:center;font-size:9px;letter-spacing:2px;color:#ffffff44;margin-top:10px}
 </style></head><body>
 <div id="stage">
- <div id="media"></div><div id="scrim"></div>
+ <div id="media"></div><div id="scrim"></div><div id="flash"></div>
  <div id="phase"></div>
  <div id="hud">
   <div id="statsrow">
@@ -114,7 +137,7 @@ const SAVE='romcine_v1', SETK='romcine_set_v1';
 const LANG_CODES=['en','zh-Hant','zh-Hans','ja'];
 let SET=Object.assign({voice:true,music:true,auto:true,lang:'en'},JSON.parse(localStorage.getItem(SETK)||'{}'));
 if(!LANG_CODES.includes(SET.lang))SET.lang='en'; // 舊存檔可能存 'zh' 這種兩碼值,退回英文
-let G=null, sub=null, timer=null, voAudio=null, bgm=null, busy=false, unlocked=false;
+let G=null, sub=null, timer=null, voAudio=null, bgm=null, busy=false, unlocked=false, flashing=false;
 const $=id=>document.getElementById(id);
 const LANGS={}; // code -> {sceneId:{overlay fields}, ui:{...}, flag:{...}}
 async function loadLangFile(code){
@@ -186,8 +209,10 @@ function go(id){stopAudio();const oldVid=$('media').querySelector('video');if(ol
  $('subs').innerHTML='';$('spoilerHost').innerHTML='';$('veilHost').innerHTML='';$('meterbox').style.display='none';
  const s=loc(id);if(!s){$('subs').innerHTML='<div class="subline">Missing scene: '+id+'</div>';return}
  G.scene=id;if(s.type!=='meter'){G.round=0}save();
- renderMedia(s);
- $('phase').textContent=s.phase||'';
+ // 影片字幕場景的媒體交給 runVideoBeat 自己渲染（先圖後片）；其他場景照舊
+ if(!(s.media&&s.media.video&&s.caption!==undefined&&s.type==='beat'))renderMedia(s);
+ // 結局/死亡卡自己有 kicker，頂部 phase 列留空（2026-09-02 修「結局」字樣出現兩次）
+ $('phase').textContent=['results','death'].includes(s.type)?'':(s.phase||'');
  $('obj').textContent=s.objective||'';
  hud(!['title','results','death'].includes(s.type));
  $('tapHint').style.display='none';$('tapHint').textContent=T().tap;
@@ -227,21 +252,53 @@ function runBeat(s){if(s.media&&s.media.video&&s.caption!==undefined){return run
   clearTimeout(timer);
   if(!started){start();return}
   if(i<lines.length){next()}else if(s.spoiler&&!$('spoilerHost').innerHTML){next()}else{finishBeat(s)}}}
+// 影片場景三段字幕（2026-09-02 Pizza 拍板，優化規劃 v2 §3）：
+//   pre  = 先停在靜態圖上放該場旁白第 1 句（約 2.6s）→ 影片開始
+//   video= 影片播放中顯示 caption（台詞；'|' 分多句，capAt=[秒…] 指定切換時間，沒給就平均分）
+//   post = 影片播完定格，放旁白最後 1 句（約 2.8s）→ 接原本 spoiler / 換場
+// pre/post 直接取自各場已翻譯好的 vo（三語都有），不用新增任何字串。點一下跳到下一段。
 function runVideoBeat(s){busy=false;
- const d=document.createElement('div');d.className='subline';d.textContent=s.caption;
- $('subs').innerHTML='';$('subs').appendChild(d);
- duckBgm();
- let advanced=false;
- const advance=()=>{if(advanced)return;advanced=true;restoreBgm();
+ const lines=(s.vo||'').split('|').filter(Boolean);
+ const caps=String(s.caption).split('|');
+ const pre=(lines.length>=2&&lines[0]!==caps[0])?lines[0]:'';
+ const post=(lines.length>=2&&lines[lines.length-1]!==caps[caps.length-1])?lines[lines.length-1]:'';
+ const showSub=t=>{const d=document.createElement('div');d.className='subline';d.textContent=t;$('subs').innerHTML='';$('subs').appendChild(d)};
+ let stage='pre',advanced=false;
+ const finish=()=>{if(advanced)return;advanced=true;restoreBgm();
   if(s.spoiler&&!$('spoilerHost').innerHTML){$('spoilerHost').innerHTML='<div id="spoiler">'+s.spoiler+'</div>';timer=setTimeout(()=>finishBeat(s),3400);return}
   finishBeat(s)};
- const vid=$('media').querySelector('video');
- if(vid){vid.onended=advance;timer=setTimeout(advance,10800)}else{timer=setTimeout(advance,4000)}
+ const postStage=()=>{if(stage==='post'||advanced)return;stage='post';clearTimeout(timer);
+  const vid=$('media').querySelector('video');if(vid)vid.pause(); // 定格在最後一格
+  if(post){showSub(post);timer=setTimeout(finish,2800)}else finish()};
+ const videoStage=()=>{if(stage!=='pre')return;stage='video';clearTimeout(timer);
+  renderMedia(s);duckBgm();
+  const capAt=Array.isArray(s.capAt)?s.capAt:(s.capAt!==undefined?[s.capAt]:[]);
+  $('subs').dataset.i='0';showSub(caps[0]);
+  const vid=$('media').querySelector('video');
+  if(vid){
+   if(caps.length>1)vid.addEventListener('timeupdate',()=>{const t=vid.currentTime;let i=0;
+    for(let k=1;k<caps.length;k++){const at=(capAt[k]!==undefined)?capAt[k]:(vid.duration||8)*k/caps.length;if(t>=at)i=k}
+    if($('subs').dataset.i!==String(i)){$('subs').dataset.i=String(i);showSub(caps[i])}});
+   vid.onended=postStage;
+   const fallbackMs=()=>Math.max(10800,(vid.duration||8)*1000+2500);
+   timer=setTimeout(postStage,fallbackMs());
+   vid.addEventListener('loadedmetadata',()=>{clearTimeout(timer);timer=setTimeout(postStage,fallbackMs())},{once:true})
+  }else{timer=setTimeout(postStage,4000)}};
+ if(pre){renderMedia(Object.assign({},s,{media:{img:s.media.img}}));showSub(pre);timer=setTimeout(videoStage,2600)}
+ else videoStage();
  $('stage').onclick=e=>{if(e.target.closest('#menu,#menuBtn,.opt,.bigbtn'))return;
-  clearTimeout(timer);
-  if(!advanced){advance()}else if(s.spoiler&&$('spoilerHost').innerHTML){finishBeat(s)}}}
+  if(stage==='pre'){videoStage();return}
+  if(stage==='video'){postStage();return}
+  if(!advanced){clearTimeout(timer);finish();return}
+  if(s.spoiler&&$('spoilerHost').innerHTML){finishBeat(s)}}}
+function flashCut(nextId){if(flashing)return;flashing=true;$('stage').onclick=null;$('tapHint').style.display='none';
+ const f=$('flash');f.style.transition='opacity .45s ease';f.style.opacity='1';
+ timer=setTimeout(()=>{go(nextId);flashing=false;
+  f.style.transition='opacity 1.1s ease .05s';f.style.opacity='0'
+ },480)}
 function finishBeat(s){if(busy)return;
  if(s.type==='choice'){busy=true;showChoices(s);return}
+ if(s.flash){if(SET.auto){flashCut(s.goto)}else{$('tapHint').style.display='block';$('stage').onclick=e=>{if(e.target.closest('#menu,#menuBtn'))return;flashCut(s.goto)}}return}
  if(SET.auto){go(s.goto)}else{$('tapHint').style.display='block';$('stage').onclick=e=>{if(e.target.closest('#menu,#menuBtn'))return;go(s.goto)}}}
 function showChoices(s){stopAudio();$('subs').innerHTML='';$('spoilerHost').innerHTML='';const p=$('panel');p.innerHTML='';
  if(s.ask)p.innerHTML+='<div id="ask">'+s.ask+'</div>';
@@ -271,24 +328,38 @@ function meterRound(s){const r=s.rounds[G.round];
  p.style.display='flex'}
 // ---- veils (title / results / death) ----
 function veilTitle(s){$('veilHost').innerHTML=
- '<div class="veil"><h1>'+s.title+'</h1><div class="vsub">'+s.sub+'</div><div class="vtag">'+s.tagline+'</div>'+
- '<button class="bigbtn" id="beginBtn">'+s.btn+'</button></div>';
+ '<div class="resVeil"><div class="resScrim"></div>'+
+ '<h1 class="resTitle up">'+s.title+'</h1>'+
+ '<div class="posterSub up" style="animation-delay:.35s">'+s.sub+'</div>'+
+ '<div class="posterTag up" style="animation-delay:.7s">'+s.tagline+'</div>'+
+ '<button class="bigbtn up" id="beginBtn" style="animation-delay:1.05s">'+s.btn+'</button></div>';
  $('beginBtn').onclick=e=>{e.stopPropagation();unlocked=true;ensureBgm();go(s.goto)}}
 function flagNames(){const ks=Object.keys(G.flags);if(!ks.length)return T().pathBook;
  const flagDict=(LANGS[SET.lang]&&LANGS[SET.lang].flag)||{};
  const names=ks.map(k=>flagDict[k]||k);return T().path+names.join(' · ')}
-function veilResults(s){stopAudio();
- $('veilHost').innerHTML='<div class="veil"><div class="cardKicker">'+s.phase+'</div><div class="cardTitle">'+s.title+'</div>'+
- '<div class="statline"><span>'+T().glory+' '+G.glory+'</span><span>'+T().wisdom+' '+G.wisdom+'</span><span>'+T().heart+' '+G.heart+'</span></div>'+
- '<div class="statline"><span>'+flagNames()+'</span></div>'+
- '<div class="cardBody">'+s.body.split('|').join('<br>')+'</div>'+
- '<div class="nxt">'+s.next+'</div><div class="nxtnote">'+s.nextNote+'</div>'+
- '<button class="bigbtn" id="againBtn">'+s.btn+'</button></div>';
+// 三圍尾聲（2026-08-31 拍板①A）：取三圍最高者選 epiGlory/epiWisdom/epiHeart 其一附在結局卡；
+// 平手時依 heart > glory > wisdom 優先（愛情戲以情義為先）。缺 epi 欄位的結局卡照舊不顯示。
+function domEpi(s){const ranked=[['Heart',G.heart],['Glory',G.glory],['Wisdom',G.wisdom]].sort((a,b)=>b[1]-a[1]);
+ return s['epi'+ranked[0][0]]||''}
+function veilResults(s){stopAudio();const epi=domEpi(s);
+ let d=0;const step=x=>{d+=x;return 'style="animation-delay:'+d.toFixed(2)+'s"'};
+ const bodyLines=s.body.split('|').map(l=>'<div '+step(.75)+'>'+l+'</div>').join('');
+ $('veilHost').innerHTML='<div class="resVeil"><div class="resScrim"></div>'+
+ '<div class="resRule up">'+s.phase+'</div><div class="resTitle up">'+s.title+'</div>'+
+ '<div class="resBody">'+bodyLines+'</div>'+
+ (epi?'<div class="resEpi" '+step(.9)+'>'+epi+'</div>':'')+
+ '<div class="resRow" '+step(.7)+'><span>'+T().glory+' '+G.glory+'</span><span>'+T().wisdom+' '+G.wisdom+'</span><span>'+T().heart+' '+G.heart+'</span></div>'+
+ '<div class="resRow" '+step(.3)+'><span>'+flagNames()+'</span></div>'+
+ '<div class="resNxt" '+step(.5)+'>'+s.next+'</div><div class="resNote" '+step(.3)+'>'+s.nextNote+'</div>'+
+ '<button class="bigbtn resBtn" id="againBtn" '+step(.4)+'>'+s.btn+'</button></div>';
  $('againBtn').onclick=e=>{e.stopPropagation();restartAll()}}
+// 死亡卡套結局卡同一套版型 A（2026-09-02 優化規劃 v2 §10）
 function veilDeath(s){stopAudio();
- $('veilHost').innerHTML='<div class="veil"><div class="cardKicker">'+T().died+'</div><div class="cardTitle">'+s.title+'</div>'+
- '<div class="cardBody">'+s.body.split('|').join('<br>')+'</div>'+
- '<button class="bigbtn" id="rewindBtn">'+s.btn+'</button></div>';
+ let d=0;const step=x=>{d+=x;return 'style="animation-delay:'+d.toFixed(2)+'s"'};
+ $('veilHost').innerHTML='<div class="resVeil"><div class="resScrim"></div>'+
+ '<div class="resRule up">'+T().died+'</div><div class="resTitle up">'+s.title+'</div>'+
+ '<div class="resBody">'+s.body.split('|').map(l=>'<div '+step(.7)+'>'+l+'</div>').join('')+'</div>'+
+ '<button class="bigbtn resBtn" id="rewindBtn" '+step(.5)+'>'+s.btn+'</button></div>';
  $('rewindBtn').onclick=e=>{e.stopPropagation();G.round=0;go(s.goto)}}
 // ---- menu ----
 function openMenu(){paintMenu();$('menu').style.display='flex'}
@@ -304,7 +375,10 @@ function paintMenu(){const t=T();
  '<div class="credit">'+t.credit+'</div>'}
 function tgl(k){SET[k]=!SET[k];saveSet();paintMenu();
  if(k==='music')ensureBgm();
- if(k==='voice'){if(!SET.voice)stopAudio();const v=$('media').querySelector('video');if(v&&G.scene!=='S09')v.muted=!SET.voice}}
+ if(k==='voice'){if(!SET.voice)stopAudio();const v=$('media').querySelector('video');
+  // 場景 media.muted 有指定時以它為準（S09/S10a/S10b 循環背景片是拍板關音的），別被語音開關翻回有聲
+  const md=(SCENES[G.scene]&&SCENES[G.scene].media)||{};
+  if(v)v.muted=(md.muted!==undefined)?md.muted:!SET.voice}}
 function tglLang(){const i=LANG_CODES.indexOf(SET.lang);SET.lang=LANG_CODES[(i+1)%LANG_CODES.length];saveSet();paintMenu();go(G.scene)}
 function restartAll(){stopAudio();localStorage.removeItem(SAVE);G=fresh();closeMenu();go('S01')}
 // ---- GameGen 引擎合約(GameConfig/GameHandle,見打包規格 §2-7)：外部可用 setLang()/destroy() 操作本遊戲 ----
@@ -312,16 +386,24 @@ window.GameHandle={
  setLang(lang){if(!LANG_CODES.includes(lang))return;SET.lang=lang;saveSet();paintMenu();go(G.scene)},
  destroy(){stopAudio();if(bgm&&bgm!=='none')bgm.pause();document.getElementById('stage').onclick=null}};
 // boot：先預熱資產解析(三層 fallback)+載入四語言 JSON,才進第一個場景
+// 2026-09-02（production-qa Q7）：影片不進開機預熱清單——9 支新片後全片共 14 支,開機同時探測會拖慢開場,
+// 且沒有意義:assetUrl() 沒預解析時會同步 fallback 回 BASE+'common/'+檔名,而影片本來就放在 common/,
+// 播放當下才現算路徑完全沒差。圖片較小張、且有 ?style= 皮膚 fallback 的實際需求,繼續預熱。
 const ASSET_LIST=['bgm_base.mp3'];
 for(const id in SCENES){const s=SCENES[id];
  if(s.media&&s.media.img)ASSET_LIST.push(s.media.img);
- if(s.media&&s.media.video)ASSET_LIST.push(s.media.video);
- if(s.type==='beat'||s.type==='choice')ASSET_LIST.push('sfx_voice_en_'+id.toLowerCase()+'_a.mp3')}
+ // 影片字幕場景(runVideoBeat)不播 VO,不預熱其配音檔——否則像 S02a 這種本來就沒配音檔的場景,開機必噴 404 探測
+ if((s.type==='beat'||s.type==='choice')&&!(s.media&&s.media.video&&s.caption!==undefined))ASSET_LIST.push('sfx_voice_en_'+id.toLowerCase()+'_a.mp3')}
 (async function boot(){
  await window.GG_warmAssets(ASSET_LIST);
  await loadAllLangs();
  G=load()||fresh();
  if(!SCENES[G.scene])G=fresh();
  go(G.scene==='S01'?'S01':G.scene);
+ // 讀檔續玩沒配樂（2026-09-02 修，優化規劃 v2 §7）：配樂原本只在片頭按「開始」才啟動。
+ // 續玩先試直接播（瀏覽器可能因無互動拒絕，靜默失敗），再用第一次點擊補啟動。
+ if(G.scene!=='S01'){unlocked=true;ensureBgm();
+  const arm=()=>{ensureBgm();document.removeEventListener('pointerdown',arm,true)};
+  document.addEventListener('pointerdown',arm,true)}
 })();
 </script></body></html>
