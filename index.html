@@ -185,6 +185,10 @@ function renderMedia(s){const m=$('media');m.innerHTML='';
  const md=s.media||{};
  if(md.video){const v=document.createElement('video');v.src=assetUrl(md.video);
   v.muted=(md.muted!==undefined)?md.muted:(window.GG_MUTED||!SET.voice); v.loop=!!md.loop; v.playsInline=true; v.autoplay=true;
+  // 2026-09-03 修：v.dataset.wantsSound 標記這場「本該有聲」——如果非手勢觸發的 play()
+  // 被瀏覽器（尤其 iOS Safari）拒絕、退回靜音播放，下面的全域 pointerdown 監聽器會在玩家
+  // 下一次點擊時（真人手勢內）把它解禁，不然會整支啞掉、字幕跟音軌對不上玩家卻聽不到。
+  v.dataset.wantsSound=v.muted?'0':'1';
   v.onerror=()=>{if(md.img){const im=document.createElement('img');im.className=(s.kb||'kb-in');im.src=assetUrl(md.img);m.innerHTML='';m.appendChild(im)}else{m.innerHTML='<div class="fallback"><span></span></div>'}};
   m.appendChild(v);m.className='fadein';
   v.play().catch(()=>{v.muted=true;v.play().catch(()=>{})});
@@ -394,6 +398,13 @@ for(const id in SCENES){const s=SCENES[id];
  if(s.media&&s.media.img)ASSET_LIST.push(s.media.img);
  // 影片字幕場景(runVideoBeat)不播 VO,不預熱其配音檔——否則像 S02a 這種本來就沒配音檔的場景,開機必噴 404 探測
  if((s.type==='beat'||s.type==='choice')&&!(s.media&&s.media.video&&s.caption!==undefined))ASSET_LIST.push('sfx_voice_en_'+id.toLowerCase()+'_a.mp3')}
+// 2026-09-03 修：iOS Safari 對「非手勢觸發的 play()」會強制禁音，setTimeout 延遲播放的
+// 影片（runVideoBeat 的 pre→video 兩段式字幕就是典型）常因此整支變啞。這支全域監聽器在玩家
+// 「下一次真的點擊」時，把當下正在播、卻因此被迫禁音的影片解禁——瀏覽器允許在手勢內對
+// 已在播放的媒體取消靜音，不需要重新觸發 play()。
+document.addEventListener('pointerdown',()=>{
+ const v=$('media').querySelector('video');
+ if(v&&v.muted&&v.dataset.wantsSound==='1')v.muted=false},true);
 (async function boot(){
  await window.GG_warmAssets(ASSET_LIST);
  await loadAllLangs();
